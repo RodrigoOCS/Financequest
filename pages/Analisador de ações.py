@@ -3,12 +3,14 @@ import datetime
 from streamlit_lottie import st_lottie  # pip install streamlit-lottie #lotties='https://lottiefiles.com/'
 import yfinance as yf
 import json
-
+from pathlib import Path
 
 
 # Config Page Style and overall data
 st.set_page_config(page_title="Bug report", page_icon="🐞", layout="centered")
-with open('lottiev1.json', "r") as f:
+
+lt_data=Path(__file__).parent / "lottiev1.json"
+with open(lt_data, "r") as f:
     lt_data = json.load(f)
 hj=datetime.datetime.today().__str__()[:10]
 periodos_possíveis = ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max']
@@ -17,7 +19,10 @@ periodos_possíveis = ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y',
 # config page funcs
 def pega_ação(quote_name,start='2010-01-01',end=hj,period='1d'):
     quote = yf.Ticker(quote_name)
-    dados = quote.history(start=start,end=end,period=period)['Close']
+    dados = quote.history(start=start,end=end,period=period)['Close'].squeeze()
+    dados.name='Valor no fim do dia'
+    dados.index.name='Data'
+
     return dados
 
 
