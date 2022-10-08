@@ -1,6 +1,8 @@
 import streamlit as st
 import datetime
 hj=datetime.datetime.today().__str__()[:10]
+#corta
+
 
 import yfinance as yf
 st.set_page_config(page_title="Bug report", page_icon="🐞", layout="centered")
