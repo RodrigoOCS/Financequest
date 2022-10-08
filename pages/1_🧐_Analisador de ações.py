@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 # Config Page Style and overall data
-st.set_page_config(page_title="Bug report", page_icon="🐞", layout="centered")
+st.set_page_config(page_title="Análise de ações", page_icon="🧐", layout="centered")
 
 lt_data=Path(__file__).parent / "lottiev1.json"
 with open(lt_data, "r") as f:

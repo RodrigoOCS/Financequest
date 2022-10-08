@@ -1,5 +1,8 @@
 import streamlit as st
 
+# Config Page Style and overall data
+st.set_page_config(page_title="Contato", page_icon="🤙", layout="centered")
+''
 
 def local_css(file_name):
     with open(file_name) as f:
