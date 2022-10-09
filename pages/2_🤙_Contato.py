@@ -9,6 +9,7 @@ def local_css(file_name):
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 st.header("Contato")
 st.write('Me envie uma mensagem!')
+
 contact_form = """
 <form action="https://formsubmit.co/bot.crescento@gmail.COM" method="POST">
      <input type="hidden" name="_captcha" value="false">
