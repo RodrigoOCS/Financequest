@@ -98,8 +98,3 @@ st.download_button(
     mime='text/csv',
 )
 
-
-    #dados.rolling(2).std().dropna()
-
-
-#else:
