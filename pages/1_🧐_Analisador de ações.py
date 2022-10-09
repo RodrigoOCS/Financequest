@@ -27,7 +27,7 @@ def pega_ação(quote_name,start='2010-01-01',end=hj,period='1d'):
     return df
 
 # Page code
-st.header('Análise as ações e ETFS pelo código!')
+st.header('Análise as ações pelo código!')
 
 Formulário1 = st.form('Histórico')
 df_stocks=Path(__file__).parent/'utils/file.xlsx'
