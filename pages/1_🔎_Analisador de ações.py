@@ -1,12 +1,13 @@
-import pandas as pd
 import streamlit as st
 import datetime
 import yfinance as yf
+import pandas as pd
 from pathlib import Path
 
 
+
 # Config Page Style and overall data
-st.set_page_config(page_title="Análise de ações", page_icon="🧐", layout="centered")
+st.set_page_config(page_title="Análise de ações", page_icon="🔎", layout="centered")
 
 hj=datetime.datetime.today().__str__()[:10]
 periodos_possíveis = ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max']
@@ -73,28 +74,25 @@ for n in range(ncols):
 
 st.write(f'De {start_} até {end_}')
 
+
+
 tab1,tab2,tab3,tab4 = st.tabs(["Tabela","Gráfico de valor","Gráfico de retorno","Volatilômetro" ])
 
 with tab1:
     st.dataframe(dados)
-
 with tab2:
    st.line_chart(dados)
 with tab3:
    st.line_chart(dados.pct_change())
 with tab4:
     horizonte = st.slider('Horizonte',1,365,7)
-    visu=True
     volatilizado = dados.rolling(horizonte).std().dropna()
-
     st.line_chart(volatilizado)
-
 csv = dados.to_csv().encode('utf-8')
-
 st.download_button(
     label="Download dados como CSV",
     data=csv,
-    file_name='large_df.csv',
+    file_name='Dados.csv',
     mime='text/csv',
 )
 

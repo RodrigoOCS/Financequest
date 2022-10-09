@@ -11,7 +11,7 @@ st.header('Página inicial')
 st.write('Olá!')
 st.write('Esse é meu aplicativo de acompanhamento financeiro')
 
-lt_path=Path(__file__).parent / "pages/utils/lottiev1.json"
+lt_path = Path(__file__).parent / "pages/utils/lottiev1.json"
 with open(lt_path, "r") as f:
     lt_data = json.load(f)
 
