@@ -89,7 +89,14 @@ with tab4:
 
     st.line_chart(volatilizado)
 
+csv = dados.to_csv().encode('utf-8')
 
+st.download_button(
+    label="Download dados como CSV",
+    data=csv,
+    file_name='large_df.csv',
+    mime='text/csv',
+)
 
 
     #dados.rolling(2).std().dropna()
