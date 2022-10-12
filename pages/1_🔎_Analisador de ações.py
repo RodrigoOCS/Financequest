@@ -1,9 +1,10 @@
+from statsmodels.tsa.stattools import adfuller
 import streamlit as st
 import datetime
 import yfinance as yf
 import pandas as pd
 from pathlib import Path
-
+from scipy.stats import boxcox
 
 
 # Config Page Style and overall data
@@ -76,18 +77,66 @@ st.write(f'De {start_} até {end_}')
 
 
 
-tab1,tab2,tab3,tab4 = st.tabs(["Tabela","Gráfico de valor","Gráfico de retorno","Volatilômetro" ])
 
-with tab1:
-    st.dataframe(dados)
+só_retornos = st.checkbox('Retornos')
+if só_retornos:
+    dados=dados.pct_change().iloc[1:]
+
+
+tab2,tab3,tab4 = st.tabs(["Valores","Transformações","Volatilômetro" ])
+dados_transformados = dados.copy()
 with tab2:
-   st.line_chart(dados)
+    st.line_chart(dados)
+
+    with st.expander('Tabela'):
+        st.table(dados_transformados)
 with tab3:
-   st.line_chart(dados.pct_change())
+    n_diff = st.number_input('Número de Diferenciações',value=1,min_value=0,step=1,max_value=5)
+    boxcox_ = st.checkbox('Transformação de BOXCOX')
+    if boxcox_:
+        autolambda = st.checkbox('Escolha automáritca de Lambda',value=True)
+
+
+        if autolambda:
+            for name_col in dados.columns:
+                dados_transformados[name_col] = boxcox(dados_transformados[name_col].values)[0]
+
+        else:
+            lambda_box = st.number_input('Valor do lambda')
+            for name_col in dados.columns:
+                dados_transformados[name_col] = boxcox(dados_transformados[name_col].values,lmbda=lambda_box)
+
+    else:
+        dados_transformados=dados.copy()
+    if n_diff!=0:
+        dados_transformados = dados_transformados.diff(n_diff).dropna()
+
+    st.line_chart(dados_transformados)
+    with st.expander('Tabela'):
+        st.table(dados_transformados)
+
+
 with tab4:
     horizonte = st.slider('Horizonte',1,365,7)
     volatilizado = dados.rolling(horizonte).std().dropna()
     st.line_chart(volatilizado)
+
+with st.expander('Teste ADF'):
+    testar_adf=st.button('Testar')
+    Série=st.selectbox(options=dados_transformados.columns,label=dados_transformados.columns[0])
+    nsig = st.number_input(label='Nível de significância', max_value=0.99, min_value=0.01,value=0.95)
+
+    if testar_adf:
+        p_valor = adfuller(dados_transformados[Série], regression='ct')[1]
+        if p_valor < 1 - nsig:
+            teste = ''
+        else:
+            teste = 'não'
+
+
+        textoadf = f'Dado o teste, cujo resultado foi de um p-valor de {str(p_valor)[:6]}, {teste} se pode afirmar que,há um nível de significância de {nsig * 100}%, que o processo contém uma raíz unitária,{teste} sendo portanto fruto de um processo não estacionário.'
+        st.write(textoadf)
+
 csv = dados.to_csv().encode('utf-8')
 st.download_button(
     label="Download dados como CSV",
