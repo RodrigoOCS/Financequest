@@ -3,6 +3,7 @@ import streamlit as st
 import datetime
 import yfinance as yf
 import pandas as pd
+from numpy import log
 from pathlib import Path
 from scipy.stats import boxcox
 
@@ -91,8 +92,17 @@ with tab2:
     with st.expander('Tabela'):
         st.table(dados_transformados)
 with tab3:
-    n_diff = st.number_input('Número de Diferenciações',value=1,min_value=0,step=1,max_value=5)
+
+    n_diff = st.number_input('Número de Diferenciações',value=0,min_value=0,step=1,max_value=5)
+
+    dados_transformados = dados.copy()
+
+    log_ = st.checkbox('Transformação em Log')
+
     boxcox_ = st.checkbox('Transformação de BOXCOX')
+    if log_:
+        dados_transformados=log(dados_transformados)
+
     if boxcox_:
         autolambda = st.checkbox('Escolha automáritca de Lambda',value=True)
 
@@ -106,8 +116,6 @@ with tab3:
             for name_col in dados.columns:
                 dados_transformados[name_col] = boxcox(dados_transformados[name_col].values,lmbda=lambda_box)
 
-    else:
-        dados_transformados=dados.copy()
     if n_diff!=0:
         dados_transformados = dados_transformados.diff(n_diff).dropna()
 

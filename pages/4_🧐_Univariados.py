@@ -4,6 +4,14 @@ import datetime
 import yfinance as yf
 from pathlib import Path
 import statsmodels.tsa.api as tsa
+from scipy.stats import boxcox
+from numpy import log
+from numpy import exp
+def boxcox_inverse(value, lam):
+    if lam == 0:
+        return exp(value)
+    return exp(log(lam * value + 1) / lam)
+
 
 st.set_page_config(page_title="Analise Univariada", page_icon="🧐", layout="centered")
 st.write('Em desenvolvimento 🏗️')
@@ -12,7 +20,6 @@ periodos_possíveis = ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y',
 
 
     # config page funcs
-
 
 def pega_ação(quote_name,start='2010-01-01',end=hj,period='1d'):
     if len(quote_name)>1:
@@ -71,20 +78,32 @@ AR_=cols[0].number_input('AR',step=1,min_value=0,max_value=5)
 I_=cols[1].number_input('I',step=1,min_value=0,max_value=5)
 MA_=cols[2].number_input('MA',step=1,min_value=0,max_value=5)
 
-n_dias = st.number_input("Dias para simular", step=1, value=3)
+check = st.checkbox('Aplicar BOXCOX')
+n_dias = st.number_input("Dias para simular", step=1, value=10)
 
 Testar=st.button("Testar")
 
+#dados=df.copy().to_frame()
 if Testar:
-
+    st.write(dados)
+    dados_2 = dados.copy()
+    if check:
+        data_alterated,lambda_=boxcox(dados[dados.columns[0]])
+        dados = pd.Series(index=dados.index,data= data_alterated)
 
     model=tsa.ARIMA(endog=dados,order=(AR_,I_,MA_))
 
     fitted=model.fit()
     st.text(fitted.summary())
-    projetado = pd.concat([dados, fitted.fittedvalues], axis=1).rename({0: f'Modelo ARIMA({AR_, I_, MA_})   '}, axis=1)
 
+    valores_projetados = fitted.fittedvalues
     fore = fitted.get_forecast(n_dias).summary_frame().iloc[:, [0, 2, 3]]
+    if check:
+        fore = boxcox_inverse(fore , lambda_)
+        valores_projetados = boxcox_inverse(valores_projetados , lambda_)
+
+    projetado = pd.concat([dados_2,valores_projetados], axis=1).rename({0: f'Modelo ARIMA({AR_, I_, MA_})   '}, axis=1)
+
 
     fore.columns = [projetado.columns[1], 'Limite inferior', 'Limite superior']
     ultdia = projetado.index[-1] + pd.offsets.Day(1)
@@ -107,6 +126,11 @@ if Testar:
     text_of_script=open(text_of_script,'r').read()
     text=text_of_script.replace('n_dias',str(n_dias)).replace('start_',str(start_)).replace('end_',str(end_)).replace('period_',period_).replace('quote_name_',quote_)
     text=text.replace('AR_',str(AR_)).replace('I_',str(I_)).replace('MA_',str(MA_))
+    if check:
+        text = text.replace('check_','True')
+    else:
+        text = text.replace('check_','False')
+
     with st.expander('Códigos em Python'):
         st.text(text)
         st.download_button(
@@ -115,7 +139,6 @@ if Testar:
             file_name=f'{quote_}.py',
             mime='text',
         )
-
 
 
 

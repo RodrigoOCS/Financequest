@@ -2,10 +2,28 @@
 import statsmodels.tsa.api as tsa
 import yfinance as yf
 import pandas as pd
+
+# Boxcox
+from scipy.stats import boxcox
+from numpy import log
+from numpy import exp
+def boxcox_inverse(value, lam):
+    if lam == 0:
+        return exp(value)
+    return exp(log(lam * value + 1) / lam)
+
+
+
 # Dowload data
 df = yf.Ticker( "quote_name_" ).history(start="start_",end="end_",period="period_")['Close'].to_frame()
 df.columns = ["quote_name_"]
 dados=df
+
+# Code Apply boxcox
+if check_:
+    data_alterated,lambda_=boxcox(dados[dados.columns[0]])
+    dados = pd.Series(index=dados.index,data= data_alterated)
+
 
 # Create and fit model
 model=tsa.ARIMA(endog=df,order=(AR_,I_,MA_))
@@ -25,6 +43,9 @@ fore.index=index_future
 
 # Join the forecast with the predicted
 dfproj=pd.concat([projetado,fore])
+if check_:
+    dfproj = boxcox_inverse(dfproj , lambda_)
+
 
 # Export
 dfproj.to_csv('Forecast and predicts.csv')
