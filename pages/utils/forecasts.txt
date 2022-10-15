@@ -17,32 +17,31 @@ def boxcox_inverse(value, lam):
 # Dowload data
 df = yf.Ticker( "quote_name_" ).history(start="start_",end="end_",period="period_")['Close'].to_frame()
 df.columns = ["quote_name_"]
-dados=df
 
 # Code Apply boxcox
 if check_:
-    data_alterated,lambda_=boxcox(dados[dados.columns[0]])
-    dados = pd.Series(index=dados.index,data= data_alterated)
+    data_alterated,lambda_=boxcox(df[df.columns[0]])
+    df = pd.Series(index=df.index,data= data_alterated)
 
 
 # Create and fit model
-model=tsa.ARIMA(endog=df,order=(AR_,I_,MA_))
-fitted=model.fit()
+model = tsa.ARIMA(endog=df,order=(AR_,I_,MA_))
+fitted = model.fit()
 
 # Get predictions
-projetado=pd.concat([dados,fitted.fittedvalues],axis=1).rename({0:f'Modelo ARIMA'},axis=1)
+projetado = pd.concat([df,fitted.fittedvalues],axis=1).rename({0:f'Modelo ARIMA'},axis=1)
 
 # Get forecast
 
-fore=fitted.get_forecast(n_dias).summary_frame().iloc[:,[0,2,3]]
-fore.columns=[projetado.columns[1],'Limite inferior','Limite superior']
+fore = fitted.get_forecast(n_dias).summary_frame().iloc[:,[0,2,3]]
+fore.columns = [projetado.columns[1],'Limite inferior','Limite superior']
 
-ultdia=projetado.index[-1]+pd.offsets.Day(1)
-index_future=pd.date_range(periods=n_dias,freq='d',start=ultdia)
-fore.index=index_future
+ultdia = projetado.index[-1]+pd.offsets.Day(1)
+index_future = pd.date_range(periods=n_dias,freq='d',start=ultdia)
+fore.index = index_future
 
 # Join the forecast with the predicted
-dfproj=pd.concat([projetado,fore])
+dfproj = pd.concat([projetado,fore])
 if check_:
     dfproj = boxcox_inverse(dfproj , lambda_)
 
