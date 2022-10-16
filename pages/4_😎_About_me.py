@@ -18,7 +18,7 @@ image=Image.open(Path(__file__).parent/'utils/Fotinha.jpeg')
 
 Sou estudante de economia, e embora a literatura econômica até seja de meu interesse, oque eu realmente pretendo fazer no dia a dia é programar e passar as ideias para scrits.
 
-Aplicações de machine learning fazem meus olhos brilharem, especialmente aplicações em jogos e exportes.
+Aplicações de machine learning fazem meus olhos brilharem, especialmente aplicações em jogos e esportes.
 
 """
 col1, col2, col3 = st.columns(3)
