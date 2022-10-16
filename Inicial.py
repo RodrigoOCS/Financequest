@@ -9,10 +9,10 @@ file_ = open(Path(__file__).parent/"ROCS.gif", "rb")
 contents = file_.read()
 data_url = base64.b64encode(contents).decode("utf-8")
 file_.close()
-st.sidebar.markdown(f'<img src="data:image/gif;base64,{data_url}" width="100" height="100" alt="cat gif">',unsafe_allow_html=True)
 
-
+# Page config
 st.set_page_config(page_title="Inicial", page_icon="👋", layout="centered")
+st.sidebar.markdown(f'<img src="data:image/gif;base64,{data_url}" width="100" height="100" alt="cat gif">',unsafe_allow_html=True)
 
 
 st.header('Página inicial')
