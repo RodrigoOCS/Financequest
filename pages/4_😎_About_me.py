@@ -12,7 +12,6 @@ file_.close()
 
 st.markdown(f'<img src="data:image/gif;base64,{data_url}" width="100" height="100" alt="cat gif">',unsafe_allow_html=True)
 image=Image.open(Path(__file__).parent/'utils/Fotinha.jpeg')
-image= image.resize((200, 200))
 
 """
     Olá, sou Rodrigo Carvalho.
