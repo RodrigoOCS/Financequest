@@ -9,7 +9,7 @@ from scipy.stats import boxcox
 
 import base64
 
-file_ = open(Path(__file__).parent/"pages/utils/ROCS.gif", "rb")
+file_ = open(Path(__file__).parent/"utils/ROCS.gif", "rb")
 contents = file_.read()
 data_url = base64.b64encode(contents).decode("utf-8")
 file_.close()

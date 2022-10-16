@@ -6,7 +6,7 @@ import base64
 
 # Config Page Style and overall data
 st.set_page_config(page_title="Fórum", page_icon="🤝", layout="centered")
-file_ = open(Path(__file__).parent/"ROCS.gif", "rb")
+file_ = open(Path(__file__).parent/"utils/ROCS.gif", "rb")
 contents = file_.read()
 data_url = base64.b64encode(contents).decode("utf-8")
 file_.close()
