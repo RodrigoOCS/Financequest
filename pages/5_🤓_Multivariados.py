@@ -8,4 +8,3 @@ import yfinance as yf
 import pandas as pd
 # Dowload data
 
-log(df)

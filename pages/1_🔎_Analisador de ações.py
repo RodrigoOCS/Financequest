@@ -7,9 +7,18 @@ from numpy import log
 from pathlib import Path
 from scipy.stats import boxcox
 
+import base64
+
+file_ = open(Path(__file__).parent/"ROCS.gif", "rb")
+contents = file_.read()
+data_url = base64.b64encode(contents).decode("utf-8")
+file_.close()
+
 
 # Config Page Style and overall data
 st.set_page_config(page_title="Análise de ações", page_icon="🔎", layout="centered")
+
+st.sidebar.markdown(f'<img src="data:image/gif;base64,{data_url}" width="100" height="100" alt="cat gif">',unsafe_allow_html=True)
 
 hj=datetime.datetime.today().__str__()[:10]
 periodos_possíveis = ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max']
