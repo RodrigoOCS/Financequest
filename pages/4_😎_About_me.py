@@ -16,7 +16,7 @@ image=Image.open(Path(__file__).parent/'utils/Fotinha.jpeg')
 """
     Olá, sou Rodrigo Carvalho.
 
-    Sou estudante de economia, e embora a literatura econômica até seja de meu interesse, o que eu realmente pretendo fazer no dia a dia é programar e passar as ideias para scrits.
+    Sou estudante de economia, e embora a literatura econômica até seja de meu interesse, o que eu realmente pretendo fazer no dia a dia é programar e passar as ideias para scripts.
 
     Aplicações de machine learning fazem meus olhos brilharem, especialmente aplicações em jogos e esportes.
 
